@@ -2,6 +2,27 @@
 name = "kalman_clustering"
 version = "0.1.0"
 edition = "2024"
+description = "Clustering vectors using Kalman Filter"
+authors = ["Lorenzo <tunedconsulting@gmail.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/tuned-org-uk/kalman_centroids"
+homepage = "https://github.com/tuned-org-uk/kalman_centroids"
+documentation = "https://docs.rs/kalman_centroids"
+readme = "README.md"
+keywords = ["vector-search", "spectral-analysis", "graph-signal", "similarity-search", "machine-learning"]
+categories = ["algorithms", "mathematics", "science"]
+exclude = [
+    "target/*",
+    "Cargo.lock",
+    ".git/*",
+    ".github/*",
+    "*.tmp",
+    "*.md",
+    "*.bib",
+    "*.cff",
+    "test_data/*",
+    "examples/*"
+]
 
 [dependencies]
 dashmap = "6.1.0"

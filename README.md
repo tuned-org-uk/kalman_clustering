@@ -14,7 +14,7 @@ This approach solves two critical bottlenecks in the manifold pipeline:
 2.  **Topology**: Constructs the Graph Laplacian using **Statistical Overlap** (Bhattacharyya Distance) rather than simple Euclidean proximity, preserving the true manifold structure.
 
 ## Quick Example
-```
+```rust
 use kalman_centroids::KalmanClusterer;
 
 fn main() {

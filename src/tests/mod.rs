@@ -1,5 +1,6 @@
 mod test_centroids;
 mod test_clustering;
+mod test_update_step;
 
 use crate::centroids::KalmanCentroid;
 use crate::init;

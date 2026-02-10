@@ -236,3 +236,85 @@ fn test_mahalanobis_stability() {
     );
     assert!(dist > 1000.0, "Distance should be huge for small variance");
 }
+
+#[test]
+fn test_process_noise_steady_state_variance_2d_all_dims_match() {
+    init();
+
+    let q = 0.25;
+    let r = 0.05;
+
+    // Same measurement for both dims, repeated.
+    let z = [0.0_f64, 0.0_f64];
+
+    let mut c = KalmanCentroid::new(&z, q, r);
+
+    for _ in 0..8000 {
+        c.update(&z);
+    }
+
+    // Scalar expected steady-state for THIS update rule:
+    // P = (-Q + sqrt(Q^2 + 4 R Q))/2
+    let p_star = (-q + (q * q + 4.0 * r * q).sqrt()) / 2.0;
+
+    let tol = 1e-4;
+
+    assert_eq!(c.variance.len(), 2);
+    for (i, &p) in c.variance.iter().enumerate() {
+        assert!(p.is_finite(), "dim {i}: variance must be finite");
+        assert!(p > 0.0, "dim {i}: variance must be positive");
+        assert!(
+            (p - p_star).abs() < tol,
+            "dim {i}: variance should converge to P*: got {p:.6}, expected {p_star:.6}"
+        );
+    }
+
+    // Also assert the two dims converge to the same value (symmetry check).
+    assert!(
+        (c.variance[0] - c.variance[1]).abs() < tol,
+        "2D symmetry: variances should match across dims"
+    );
+}
+
+#[test]
+fn test_process_noise_steady_state_variance_8d_all_dims_match() {
+    init();
+
+    let q = 2.0;
+    let r = 0.1;
+
+    let dim = 8;
+    let z: Vec<f64> = vec![0.0; dim];
+
+    let mut c = KalmanCentroid::new(&z, q, r);
+
+    for _ in 0..12000 {
+        c.update(&z);
+    }
+
+    let p_star = (-q + (q * q + 4.0 * r * q).sqrt()) / 2.0;
+
+    // Slightly looser tolerance for longer loops / platform differences.
+    let tol = 2e-3;
+
+    assert_eq!(c.variance.len(), dim);
+
+    // 1) Each dimension converges to P*
+    for (i, &p) in c.variance.iter().enumerate() {
+        assert!(p.is_finite(), "dim {i}: variance must be finite");
+        assert!(p > 0.0, "dim {i}: variance must be positive");
+        assert!(
+            (p - p_star).abs() < tol,
+            "dim {i}: variance should converge to P*: got {p:.6}, expected {p_star:.6}"
+        );
+    }
+
+    // 2) All dimensions agree with each other (strong symmetry assertion)
+    let p0 = c.variance[0];
+    for (i, &p) in c.variance.iter().enumerate().skip(1) {
+        assert!(
+            (p - p0).abs() < tol,
+            "8D symmetry: dim {i} variance differs: {p:.6} vs {p0:.6}"
+        );
+    }
+}

@@ -1,6 +1,6 @@
-# Kalman Centroids: Adaptive Manifold Clustering
+# Kalman Clustering: Adaptive Clustering for Manifold creation
 
-**A single-pass, statistical clustering engine for Graph Wiring that builds topology-aware Graph Laplacians.**
+**A single-pass, statistical clustering engine for Graph Wiring to build spectral Graph Laplacians.**
 
 ![Status](https://img.shields.io/badge/Status-Experimental-yellow)
 ![Performance](https://img.shields.io/badge/Complexity-O(N)-green)
@@ -10,8 +10,8 @@
 `kalman_clustering` replaces traditional multi-trial K-Means (Lloyd's algorithm) with a **Kalman Filter-based adaptive streaming algorithm**. Instead of treating centroids as static points in geometric space, this library models them as **Gaussian distributions** (Mean $\mu$ + Variance $\Sigma$) that evolve over time.
 
 This approach solves two critical bottlenecks in the manifold pipeline:
-1.  **Speed**: Eliminates the expensive "guess and check" `compute_optimal_k` heuristic.
-2.  **Topology**: Constructs the Graph Laplacian using **Statistical Overlap** (Bhattacharyya Distance) rather than simple Euclidean proximity, preserving the true manifold structure.
+1.  **Speed**: Eliminates the expensive "guess and check" for an optimal-k heuristic.
+2.  **Spectral-awareness**: Constructs the Graph Laplacian using **Statistical Overlap** (Bhattacharyya Distance) rather than simple Euclidean proximity, preserving the true manifold structure.
 
 ## Quick Example
 ```rust
@@ -74,7 +74,7 @@ Instead of Euclidean distance, we build the Graph Laplacian using **Bhattacharyy
 
 $D_B = \frac{1}{4} \frac{(\mu_1 - \mu_2)^2}{\sigma_1^2 + \sigma_2^2} + \frac{1}{2} \ln \left( \frac{\sigma_1^2 + \sigma_2^2}{2 \sqrt{\sigma_1^2 \sigma_2^2}} \right)$
 
-**Result**: The Laplacian $L$ encodes the manifold invariant:
+**Result**: The Laplacian $L$ computed on these centroids encodes the manifold invariant:
 > **Manifold = Laplacian(Transpose(Centroids))**
 
 ## Performance vs. K-Means

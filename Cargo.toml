@@ -34,7 +34,7 @@ burn = { version = "0.20.1", default-features = false, features = ["std", "train
 burn-ndarray = { version = "0.20.1", optional = true }
 burn-wgpu = { version = "0.20.1", optional = true }
 burn-cuda = { version = "0.20.1", optional = true }
-ndarray = { version = "0.16.1", optional = true }
+ndarray = { version = "0.17.2", optional = true }
 
 [dev-dependencies]
 rand = "0.9.2"
